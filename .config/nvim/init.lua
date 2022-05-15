@@ -268,7 +268,22 @@ require('telescope').setup{
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('file_browser')
 -- Telescope maps
+
 nmap{"<leader>ff", "<cmd>Telescope find_files<CR>"}
+nmap{"<leader>fg", "<cmd>Telescope live_grep<CR>"}
+nmap{"<leader>fb", "<cmd>Telescope buffers<CR>"}
+nmap{"<leader>fh", "<cmd>Telescope help_tags<CR>"}
+nmap{"<leader>fb", "<cmd>Telescope file_browser<CR>"}
+nmap{"<leader>fh", "<cmd>Telescope help_tags<CR>"}
+
+nmap {"<leader>bn","<cmd>:bnext<CR>"}
+nmap {"<leader>bp","<cmd>:bprevious<CR>"}
+nmap {"<leader>bf","<cmd>:bfirst<CR>"}
+nmap {"<leader>bl","<cmd>:blast<CR>"}
+nmap {"<leader>fn","<cmd>Telescope find_files cwd=~/.config/nvim<cr>"}
+nmap {"<leader>fd","<cmd>Telescope find_files cwd=~/Development<cr>"}
+nmap {"<leader>fw","<cmd>Telescope find_files cwd=~/Development/work<cr>"}
+
 local mappings = {
 }
 mappings.curr_buf = function() 
