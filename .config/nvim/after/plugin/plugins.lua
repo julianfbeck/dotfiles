@@ -16,6 +16,7 @@ use {'catppuccin/nvim', as = 'catppuccin'}
 use "hrsh7th/nvim-cmp" --completion
 use {'tzachar/cmp-tabnine', run='./install.sh', requires = 'hrsh7th/nvim-cmp'}
 use {'onsails/lspkind.nvim'}
+use {"github/copilot.vim"}
 --Treesitter
 use {
   'nvim-treesitter/nvim-treesitter',

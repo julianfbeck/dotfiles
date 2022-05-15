@@ -26,7 +26,7 @@ alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %
 
 #directories
 alias pgr='cd /Users/julianbeck/Development'
-
+alias godir=' cd /Users/julianbeck/Development/GoWorkspace/src/github.com/julianfbeck'
 #copys ip adress to clipboard and removes new line
 alias ipc='ipconfig getifaddr en0 | tr -d '\n' | pbcopy' 
 alias pub='cat ~/.ssh/id_rsa.pub'
