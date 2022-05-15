@@ -13,9 +13,9 @@ vim.o.scrolloff = 7
 vim.o.backup = false
 vim.o.writebackup = false
 vim.o.swapfile = false
+vim.g.mapleader = ' '
 -- use y and p with the system clipboard
 vim.o.clipboard = unnamedplus
-
 local keymap = function(tbl)
 	-- Some sane default options
 	local opts = { noremap = true, silent = true }
@@ -66,6 +66,15 @@ vim.keymap.set("n", "<leader>p", "<cmd>Glow<cr>")
 -- Native LSP Setup
 -- Global setup.
 local cmp = require'cmp'
+
+local source_mapping = {
+	buffer = "[Buffer]",
+	nvim_lsp = "[LSP]",
+	nvim_lua = "[Lua]",
+	cmp_tabnine = "[TN]",
+	path = "[Path]",
+}
+local lspkind = require("lspkind")
 cmp.setup({
 snippet = {
    expand = function(args)
@@ -75,6 +84,8 @@ snippet = {
   mapping = {
     ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
     ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+	['<C-k>'] = cmp.mapping.select_prev_item(),
+	['<C-j>'] = cmp.mapping.select_next_item(),
     ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
     ['<C-e>'] = cmp.mapping({
       i = cmp.mapping.abort(),
@@ -84,12 +95,37 @@ snippet = {
     -- Set `select` to `false` to only confirm explicitly selected items.
     ['<CR>'] = cmp.mapping.confirm({ select = true }),
   },
+  formatting = {
+	format = function(entry, vim_item)
+		vim_item.kind = lspkind.presets.default[vim_item.kind]
+		local menu = source_mapping[entry.source.name]
+		if entry.source.name == "cmp_tabnine" then
+			if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
+				menu = entry.completion_item.data.detail .. " " .. menu
+			end
+			vim_item.kind = ""
+		end
+		vim_item.menu = menu
+		return vim_item
+	end,
+},
   sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' }, -- For luasnip users.
-  }, {
-    { name = 'buffer' },
+	{ name = "cmp_tabnine" },
+
+	{ name = "nvim_lsp" },
+
+	 { name = "luasnip" },
+
+	{ name = "buffer" },
   })
+})
+local tabnine = require("cmp_tabnine.config")
+tabnine:setup({
+	max_lines = 1000,
+	max_num_results = 20,
+	sort = true,
+	run_on_every_keystroke = true,
+	snippet_placeholder = "..",
 })
 
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -231,7 +267,8 @@ require('telescope').setup{
 }
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('file_browser')
-
+-- Telescope maps
+nmap{"<leader>ff", "<cmd>Telescope find_files<CR>"}
 local mappings = {
 }
 mappings.curr_buf = function() 

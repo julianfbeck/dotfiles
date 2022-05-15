@@ -12,9 +12,15 @@ return require('packer').startup(function(use)
 use 'wbthomason/packer.nvim'
 use {'catppuccin/nvim', as = 'catppuccin'}
 
+-- CMP
+use "hrsh7th/nvim-cmp" --completion
+use {'tzachar/cmp-tabnine', run='./install.sh', requires = 'hrsh7th/nvim-cmp'}
+use {'onsails/lspkind.nvim'}
 --Treesitter
--- use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
-
+use {
+  'nvim-treesitter/nvim-treesitter',
+  run = ':TSUpdate'
+}
 --Markdown preview
 use 'ellisonleao/glow.nvim'
 
