@@ -12,11 +12,6 @@ return require('packer').startup(function(use)
 use 'wbthomason/packer.nvim'
 use {'catppuccin/nvim', as = 'catppuccin'}
 
--- CMP
-use "hrsh7th/nvim-cmp" --completion
-use {'tzachar/cmp-tabnine', run='./install.sh', requires = 'hrsh7th/nvim-cmp'}
-use {'onsails/lspkind.nvim'}
-use {"github/copilot.vim"}
 --Treesitter
 use {
   'nvim-treesitter/nvim-treesitter',
@@ -31,6 +26,7 @@ use 'sheerun/vim-polyglot'
 --Nvim motions
 use 'phaazon/hop.nvim'
 
+use 'terryma/vim-multiple-cursors'
 --LSP autocomplete
 use 'hrsh7th/nvim-cmp'
 use 'hrsh7th/cmp-nvim-lsp'
@@ -40,6 +36,9 @@ use 'L3MON4D3/LuaSnip'
 use 'saadparwaiz1/cmp_luasnip'
 use 'neovim/nvim-lspconfig'
 use 'williamboman/nvim-lsp-installer'
+use {'tzachar/cmp-tabnine', run='./install.sh', requires = 'hrsh7th/nvim-cmp'}
+use {'onsails/lspkind.nvim'}
+use {"github/copilot.vim"}
 
 --File browsing
 use 'nvim-telescope/telescope-file-browser.nvim'
@@ -75,9 +74,18 @@ use 'sindrets/diffview.nvim'
 --magit
 use 'TimUntersberger/neogit'
 
---todo comments
+--comments
 use 'folke/todo-comments.nvim'
+use {
+  'numToStr/Comment.nvim',
+  config = function()
+      require('Comment').setup()
+  end
+}
+-- vim surround
+use 'tpope/vim-surround'
 
+use 'windwp/nvim-autopairs'
 --devicons
 use 'kyazdani42/nvim-web-devicons'
 

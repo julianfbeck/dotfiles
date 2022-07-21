@@ -30,8 +30,6 @@ local keymap = function(tbl)
 			opts[k] = v
 		end
 	end
-
-
 	if bufnr ~= nil then
 		vim.api.nvim_buf_set_keymap(bufnr, mode, tbl[1], tbl[2], opts)
 	else
@@ -55,7 +53,7 @@ if not ok then return end
 catppuccin.setup {}
 vim.cmd[[colorscheme catppuccin]]
 
--- require'nvim-treesitter.configs'.setup { ensure_installed = "all", highlight = { enable = true } }
+require'nvim-treesitter.configs'.setup { ensure_installed = "all" , ignore_install = {"phpdoc"}, highlight = { enable = true } }
 
 vim.g.glow_binary_path = vim.env.HOME .. "/bin"
 vim.g.glow_use_pager = true
@@ -66,7 +64,6 @@ vim.keymap.set("n", "<leader>p", "<cmd>Glow<cr>")
 -- Native LSP Setup
 -- Global setup.
 local cmp = require'cmp'
-
 local source_mapping = {
 	buffer = "[Buffer]",
 	nvim_lsp = "[LSP]",
@@ -74,6 +71,13 @@ local source_mapping = {
 	cmp_tabnine = "[TN]",
 	path = "[Path]",
 }
+-- load comments extension
+require('Comment').setup()
+
+-- load autopairs load_extension
+require('nvim-autopairs').setup{}
+
+-- used to show formatted icons
 local lspkind = require("lspkind")
 cmp.setup({
 snippet = {
@@ -134,8 +138,8 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protoco
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local lsp_installer = require("nvim-lsp-installer")
-lsp_installer.settings({
+require("nvim-lsp-installer").setup({
+    automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
     ui = {
         icons = {
             server_installed = "✓",
@@ -193,16 +197,6 @@ local on_attach = function(client, bufnr)
 	-- buf_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
 	-- buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
-	if client.server_capabilities.document_formatting then
-		vim.cmd([[
-			augroup formatting
-				autocmd! * <buffer>
-				autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
-				autocmd BufWritePre <buffer> lua OrganizeImports(1000)
-			augroup END
-		]])
-	end
-
 	-- Set autocommands conditional on server_capabilities
 	if client.server_capabilities.document_highlight then
 		vim.cmd([[
@@ -213,9 +207,29 @@ local on_attach = function(client, bufnr)
 			augroup END
 		]])
 	end
-end
 
-lsp_installer.setup{}
+	-- if client.server_capabilities.document_formatting then
+		-- vim.cmd([[
+		-- 	augroup formatting
+		-- 		autocmd! * <buffer>
+		-- 		autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
+		-- 		autocmd BufWritePre <buffer> lua OrganizeImports(1000)
+		-- 	augroup END
+		-- ]])
+	-- end
+     -- Set some keybinds conditional on server capabilities
+	if client.resolved_capabilities.document_formatting then
+		buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+	elseif client.resolved_capabilities.document_range_formatting then
+		buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+	end	
+
+end
+local lua_opts = {}
+
+
+
+
 local lspconfig = require('lspconfig')
 lspconfig.gopls.setup {
 	capabilities = capabilities,
@@ -223,13 +237,32 @@ lspconfig.gopls.setup {
 	settings = {
 		gopls = {
 			gofumpt = true,
+			analyses = {
+				unusedparams = true,
+			},
+			staticcheck = true,
 		},
 	},
 	flags = {
 		debounce_text_changes = 150,
 	},
-
 }
+lspconfig.rust_analyzer.setup {
+	on_attach = on_attach,
+	capabilities = capabilities,
+	settings = {
+		rust_analyzer = {
+			completion = {
+				enable_snippets = "true",
+			},
+			experimental_features = {
+				"rust-analyzer-completion-tests",
+				"rust-analyzer-completion-tests-tests",
+			},
+		},
+	},
+}
+
 
 -- organize imports
 -- https://github.com/neovim/nvim-lspconfig/issues/115#issuecomment-902680058
