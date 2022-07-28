@@ -89,11 +89,17 @@ use 'windwp/nvim-autopairs'
 --devicons
 use 'kyazdani42/nvim-web-devicons'
 
+-- harpoon 
+use 'ThePrimeagen/harpoon'
 --fullstack dev
 use 'pangloss/vim-javascript' --JS support
 use 'leafgarland/typescript-vim' --TS support
 use 'maxmellon/vim-jsx-pretty' --JS and JSX syntax
 use 'jparise/vim-graphql' --GraphQL syntax
 use 'mattn/emmet-vim'
+
+
+-- devOps tools
+use 'https://github.com/rottencandy/vimkubectl'
 end)
 

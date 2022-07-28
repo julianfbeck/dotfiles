@@ -130,6 +130,11 @@ _G.packer_plugins = {
     path = "/Users/julianbeck/.local/share/nvim/site/pack/packer/start/glow.nvim",
     url = "https://github.com/ellisonleao/glow.nvim"
   },
+  harpoon = {
+    loaded = true,
+    path = "/Users/julianbeck/.local/share/nvim/site/pack/packer/start/harpoon",
+    url = "https://github.com/ThePrimeagen/harpoon"
+  },
   ["haskell-vim"] = {
     loaded = true,
     path = "/Users/julianbeck/.local/share/nvim/site/pack/packer/start/haskell-vim",
@@ -275,6 +280,11 @@ _G.packer_plugins = {
     path = "/Users/julianbeck/.local/share/nvim/site/pack/packer/start/vim-jsx-pretty",
     url = "https://github.com/maxmellon/vim-jsx-pretty"
   },
+  ["vim-multiple-cursors"] = {
+    loaded = true,
+    path = "/Users/julianbeck/.local/share/nvim/site/pack/packer/start/vim-multiple-cursors",
+    url = "https://github.com/terryma/vim-multiple-cursors"
+  },
   ["vim-polyglot"] = {
     loaded = true,
     path = "/Users/julianbeck/.local/share/nvim/site/pack/packer/start/vim-polyglot",
@@ -284,6 +294,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/julianbeck/.local/share/nvim/site/pack/packer/start/vim-surround",
     url = "https://github.com/tpope/vim-surround"
+  },
+  vimkubectl = {
+    loaded = true,
+    path = "/Users/julianbeck/.local/share/nvim/site/pack/packer/start/vimkubectl",
+    url = "https://github.com/rottencandy/vimkubectl"
   }
 }
 

@@ -184,6 +184,7 @@ local custom_attach = function(client, bufnr)
     -- leaving only what I actually use...
     buf_set_keymap("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
     buf_set_keymap("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
+    buf_set_keymap("n", "ca", "<cmd>Telescope lsp_code_actions<CR>", opts)
 
     buf_set_keymap("n", "<C-j>", "<cmd>Telescope lsp_document_symbols<CR>", opts)
     buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
@@ -256,9 +257,29 @@ local servers = {
     html = true,
     pyright = true,
     vimls = true,
-    yamlls = true,
+    -- yaml extension
+    -- currently enabeling kubernetes using https://github.com/neovim/nvim-lspconfig/issues/1207
+    -- More info here: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#yamlls
+    yamlls = {
+        settings = {
+            yaml = {
+                trace = {
+                    server = "verbose"
+                },
+                schemas = {
+                    kubernetes = "/*.yaml"
+                },
+                schemaDownload = { enable = true },
+                validate = true,
+            }
+        },
+    },
     eslint = true,
     sumneko_lua = true,
+    svelte = true,
+    elixirls = true,
+    tsserver = true,
+    tailwindcss = true,
 
     gopls = {
         settings = {
