@@ -14,6 +14,9 @@ export ZSH="/Users/julianbeck/.oh-my-zsh"
 export HOMEBREW_AUTO_UPDATE_SECS=604800
 export GOPATH=/Users/$USER/go
 export PATH=$GOPATH/bin:$PATH
+
+# custom bin directory
+export PATH=$HOME/bin:$PATH
 export PATH="/opt/homebrew/opt/gnu-tar/libexec/gnubin:$PATH"
 export PATH=$HOME/Library/Python/3.8/bin:/opt/homebrew/bin:/usr/local/bin:/usr/local/sbin:$HOME/bin:$HOME/go/bin:/usr/local/git/bin:$HOME/.composer/vendor/bin:$PATH
 

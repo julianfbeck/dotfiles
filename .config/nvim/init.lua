@@ -280,6 +280,7 @@ local servers = {
     elixirls = true,
     tsserver = true,
     tailwindcss = true,
+    marksman = true,
 
     gopls = {
         settings = {
