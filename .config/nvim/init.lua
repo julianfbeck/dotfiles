@@ -14,6 +14,37 @@ vim.o.backup = false
 vim.o.writebackup = false
 vim.o.swapfile = false
 vim.g.mapleader = ' '
+
+
+-- global configs for copilot
+  vim.g.copilot_filetypes = {
+    ["*"] = false,
+    ["javascript"] = true,
+    ["typescript"] = true,
+    ["lua"] = true,
+    ["rust"] = true,
+    ["c"] = true,
+    ["c#"] = true,
+    ["c++"] = true,
+    ["go"] = true,
+    ["python"] = true,
+    ["markdown"] = true,
+    ["md"] = true,
+    ["html"] = true,
+    ["css"] = true,
+    ["java"] = true,
+    ["kotlin"] = true,
+    ["php"] = true,
+    ["ruby"] = true,
+    ["scala"] = true,
+    ["swift"] = true,
+    ["yaml"] = true,
+    ["json"] = true,
+    ["toml"] = true,
+    ["ini"] = true,
+    ["xml"] = true,
+  }
+
 -- use y and p with the system clipboard
 vim.o.clipboard = unnamedplus
 local keymap = function(tbl)
@@ -339,14 +370,14 @@ for server, config in pairs(servers) do
     setup_server(server, config)
 end
 
--- format on save
-vim.cmd([[
-	augroup formatting
-		autocmd! * <buffer>
-		autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
-		autocmd BufWritePre <buffer> lua OrganizeImports(1000)
-	augroup END
-]])
+-- format on save commented out because it causes problems on non lsp buffers
+-- vim.cmd([[
+-- 	augroup formatting
+-- 		autocmd! * <buffer>
+-- 		autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
+-- 		autocmd BufWritePre <buffer> lua OrganizeImports(1000)
+-- 	augroup END
+-- ]])
 
 -- organize imports
 -- https://github.com/neovim/nvim-lspconfig/issues/115#issuecomment-902680058
