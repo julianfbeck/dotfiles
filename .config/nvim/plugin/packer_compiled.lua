@@ -255,6 +255,11 @@ _G.packer_plugins = {
     path = "/Users/julianbeck/.local/share/nvim/site/pack/packer/start/typescript-vim",
     url = "https://github.com/leafgarland/typescript-vim"
   },
+  ["vim-fugitive"] = {
+    loaded = true,
+    path = "/Users/julianbeck/.local/share/nvim/site/pack/packer/start/vim-fugitive",
+    url = "https://github.com/tpope/vim-fugitive"
+  },
   ["vim-grammarous"] = {
     loaded = true,
     path = "/Users/julianbeck/.local/share/nvim/site/pack/packer/start/vim-grammarous",

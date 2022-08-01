@@ -37,6 +37,7 @@ vim.g.mapleader = ' '
     ["php"] = true,
     ["ruby"] = true,
     ["scala"] = true,
+    ["svelte"] = true,
     ["swift"] = true,
     ["yaml"] = true,
     ["json"] = true,
@@ -45,8 +46,10 @@ vim.g.mapleader = ' '
     ["xml"] = true,
   }
 
--- use y and p with the system clipboard
-vim.o.clipboard = unnamedplus
+-- enable system clipboard
+vim.cmd("set clipboard=unnamedplus")
+
+
 local keymap = function(tbl)
     -- Some sane default options
     local opts = {
@@ -106,8 +109,8 @@ vim.keymap.set("n", "<leader>p", "<cmd>Glow<cr>")
 -- Global setup.
 local cmp = require 'cmp'
 local source_mapping = {
-    buffer = "[Buffer]",
     nvim_lsp = "[LSP]",
+    buffer = "[Buffer]",
     nvim_lua = "[Lua]",
     cmp_tabnine = "[TN]",
     path = "[Path]"
@@ -159,19 +162,22 @@ cmp.setup({
         end
     },
     sources = cmp.config.sources({ {
-        name = "cmp_tabnine"
-    }, {
         name = "nvim_lsp"
     }, {
-        name = "luasnip"
+        name = "cmp_tabnine"
     }, {
-        name = "buffer"
+        name = "luasnip",
+        max_item_count = 10
+    }, {
+        name = "buffer",
+        max_item_count = 10
+
     } })
 })
 local tabnine = require("cmp_tabnine.config")
 tabnine:setup({
     max_lines = 1000,
-    max_num_results = 20,
+    max_num_results = 7,
     sort = true,
     run_on_every_keystroke = true,
     snippet_placeholder = ".."
@@ -221,11 +227,14 @@ local custom_attach = function(client, bufnr)
     buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 
     buf_set_keymap("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
-    buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+    -- buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+    buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
+
     buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
     buf_set_keymap("n", "<leader>D", "<cmd>Telescope lsp_type_definitions<CR>", opts)
     buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
     buf_set_keymap("n", "<leader>ca", "<cmd>Telescope lsp_code_actions<CR>", opts)
+
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, {
         buffer = 0
     })
@@ -250,6 +259,7 @@ local custom_attach = function(client, bufnr)
     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {
         buffer = 0
     })
+
     nmap { "C-f", "<cmd>Telescope current_buffer_fuzzy_find sorting_strategy=ascending prompt_position=top<CR>" }
     nmap { "<leader>lg", "<cmd>Telescope live_grep<CR>" }
 
