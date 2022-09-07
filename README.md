@@ -10,6 +10,9 @@ https://www.atlassian.com/git/tutorials/dotfiles
 - PREFIX + P : Show projects
 - PREFIX + r : reload config
 
+# MacOS 
+- CMD+SHIFT+`: Switch Window of same App
+
 
 
 
