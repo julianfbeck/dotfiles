@@ -71,3 +71,5 @@ alias keys='for key in ~/.ssh/id_*; do ssh-keygen -l -f "${key}"; done | uniq'
 
 ## kUbernets
 alias k=kubectl
+# dotfiles
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'

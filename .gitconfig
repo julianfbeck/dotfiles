@@ -1,8 +1,6 @@
 [user]
   name = Julian Beck
   email = ju-fa-beck@t-online.de
-[includeIf "gitdir:~/Development/work/"]
-  path = ~/Development/work/.gitconfig
 [core]
   editor = vi
   excludesfile = ~/.gitignore
