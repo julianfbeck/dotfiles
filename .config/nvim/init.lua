@@ -44,6 +44,8 @@ vim.g.mapleader = ' '
     ["toml"] = true,
     ["ini"] = true,
     ["xml"] = true,
+    ["terraform"] =  true,
+
   }
 
 -- enable system clipboard
@@ -322,7 +324,8 @@ local servers = {
     tsserver = true,
     tailwindcss = true,
     marksman = true,
-
+    terraformls = true,
+    tflint = true,
     gopls = {
         settings = {
             gopls = {

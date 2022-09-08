@@ -10,10 +10,14 @@ fi
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 source /opt/homebrew/opt/powerlevel10k/powerlevel10k.zsh-theme
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/julianbeck/.oh-my-zsh"
+export ZSH="~/.oh-my-zsh"
 export HOMEBREW_AUTO_UPDATE_SECS=604800
 export GOPATH=/Users/$USER/go
 export PATH=$GOPATH/bin:$PATH
+
+
+# use emacs: https://stackoverflow.com/questions/18240683/how-to-force-emacs-style-status-keys-in-tmux/39520371#39520371
+bindkey -e
 
 # custom bin directory
 export PATH=$HOME/bin:$PATH
@@ -39,6 +43,15 @@ plugins=(git
   docker-compose
   zsh-syntax-highlighting
 )
+
+
+## Make sure to install the plugins
+## git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+## git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+source ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $ZSH/oh-my-zsh.sh
 
 # Set architecture-specific brew share path.
 arch_name="$(uname -m)"
@@ -71,7 +84,6 @@ export NVM_DIR="$HOME/.nvm"
   [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
 # Manage Dotfiles
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias sourcetmux='tmux source ~/.tmux.conf'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.

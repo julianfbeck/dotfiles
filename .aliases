@@ -66,7 +66,18 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias keys='for key in ~/.ssh/id_*; do ssh-keygen -l -f "${key}"; done | uniq'
 
-
+# terraform
+alias tf="terraform"
+alias ta="terraform apply"
+alias td="terraform destroy"
+alias to="terraform output"
+terraform() {
+    if [[ $@ == "apply"* ]] || [[ $@ == "destroy"* ]]; then
+        command terraform $(echo "$@" | sed 's/-y/--auto-approve/g')
+    else
+        command terraform "$@"
+    fi
+}
 
 
 ## kUbernets
