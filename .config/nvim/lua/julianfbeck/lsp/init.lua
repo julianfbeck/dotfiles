@@ -12,6 +12,13 @@ require("nvim-lsp-installer").setup({
     }
 })
 
+local has_lsp, lspconfig = pcall(require, "lspconfig")
+if not has_lsp then
+    return
+end
+
+
+
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 local custom_init = function(client)
@@ -140,7 +147,8 @@ local servers = {
         settings = {
             tsserver = {
                 filetypes = {"typescript", "typescriptreact", "typescript.tsx"},
-                cmd = {"typescript-language-server", "--stdio"}
+                cmd = {"typescript-language-server", "--stdio"},
+				root_dir = lspconfig.util.root_pattern('.git');
             }
         }
     },
@@ -175,11 +183,6 @@ local servers = {
     }
 
 }
-local has_lsp, lspconfig = pcall(require, "lspconfig")
-if not has_lsp then
-    return
-end
-
 local setup_server = function(server, config)
     if not config then
         return
