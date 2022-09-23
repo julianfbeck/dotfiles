@@ -158,9 +158,17 @@ return require('packer').startup(function(use)
         end
     }
 
+    -- load projects
+    use 'ahmedkhalf/project.nvim'    
+
+
     -- vim git tools
     use 'tpope/vim-fugitive'
     -- devOps tools
     use 'https://github.com/rottencandy/vimkubectl'
+
+    -- show shortcuts
+    use 'folke/which-key.nvim'
+
 end)
 

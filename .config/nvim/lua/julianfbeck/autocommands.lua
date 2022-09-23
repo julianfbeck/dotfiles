@@ -28,3 +28,6 @@ vim.api.nvim_create_autocmd({"User"}, {
     end
 })
 
+-- format on save commented out because it causes problems on non lsp buffers
+vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
+
