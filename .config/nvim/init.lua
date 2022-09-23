@@ -16,9 +16,8 @@ vim.o.swapfile = false
 vim.g.mapleader = ' '
 vim.o.relativenumber = true
 
-
 -- global configs for copilot
-  vim.g.copilot_filetypes = {
+vim.g.copilot_filetypes = {
     ["*"] = false,
     ["javascript"] = true,
     ["typescript"] = true,
@@ -45,13 +44,12 @@ vim.o.relativenumber = true
     ["toml"] = true,
     ["ini"] = true,
     ["xml"] = true,
-    ["terraform"] =  true,
+    ["terraform"] = true
 
-  }
+}
 
 -- enable system clipboard
 vim.cmd("set clipboard=unnamedplus")
-
 
 local keymap = function(tbl)
     -- Some sane default options
@@ -86,18 +84,10 @@ local imap = function(tbl)
     tbl['mode'] = 'i'
     keymap(tbl)
 end
--- Aesthetic
--- pcall catches errors if the plugin doesn't load
-local ok, catppuccin = pcall(require, "catppuccin")
-if not ok then
-    return
-end
-catppuccin.setup {}
-vim.cmd [[colorscheme catppuccin]]
 
-require 'nvim-treesitter.configs'.setup {
+require'nvim-treesitter.configs'.setup {
     ensure_installed = "all",
-    ignore_install = { "phpdoc" },
+    ignore_install = {"phpdoc"},
     highlight = {
         enable = true
     }
@@ -107,84 +97,6 @@ vim.g.glow_binary_path = vim.env.HOME .. "/bin"
 vim.g.glow_use_pager = true
 vim.g.glow_border = "shadow"
 vim.keymap.set("n", "<leader>p", "<cmd>Glow<cr>")
-
--- Native LSP Setup
--- Global setup.
-local cmp = require 'cmp'
-local source_mapping = {
-    nvim_lsp = "[LSP]",
-    buffer = "[Buffer]",
-    nvim_lua = "[Lua]",
-    cmp_tabnine = "[TN]",
-    path = "[Path]"
-}
--- load comments extension
-require('Comment').setup()
-
--- load autopairs load_extension
-require('nvim-autopairs').setup {}
-
--- used to show formatted icons
-local lspkind = require("lspkind")
-cmp.setup({
-    snippet = {
-        expand = function(args)
-            require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-        end
-    },
-    mapping = {
-        ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-        ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
-        ['<C-k>'] = cmp.mapping.select_prev_item(),
-        ['<C-j>'] = cmp.mapping.select_next_item(),
-        ['<C-p>'] = cmp.mapping.select_prev_item(),
-        ['<C-n>'] = cmp.mapping.select_next_item(),
-        ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-        ['<C-e>'] = cmp.mapping({
-            i = cmp.mapping.abort(),
-            c = cmp.mapping.close()
-        }),
-        -- Accept currently selected item. If none selected, `select` first item.
-        -- Set `select` to `false` to only confirm explicitly selected items.
-        ['<CR>'] = cmp.mapping.confirm({
-            select = true
-        })
-    },
-    formatting = {
-        format = function(entry, vim_item)
-            vim_item.kind = lspkind.presets.default[vim_item.kind]
-            local menu = source_mapping[entry.source.name]
-            if entry.source.name == "cmp_tabnine" then
-                if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
-                    menu = entry.completion_item.data.detail .. " " .. menu
-                end
-                vim_item.kind = ""
-            end
-            vim_item.menu = menu
-            return vim_item
-        end
-    },
-    sources = cmp.config.sources({ {
-        name = "nvim_lsp"
-    }, {
-        name = "cmp_tabnine"
-    }, {
-        name = "luasnip",
-        max_item_count = 10
-    }, {
-        name = "buffer",
-        max_item_count = 10
-
-    } })
-})
-local tabnine = require("cmp_tabnine.config")
-tabnine:setup({
-    max_lines = 1000,
-    max_num_results = 7,
-    sort = true,
-    run_on_every_keystroke = true,
-    snippet_placeholder = ".."
-})
 
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
@@ -263,8 +175,8 @@ local custom_attach = function(client, bufnr)
         buffer = 0
     })
 
-    nmap { "C-f", "<cmd>Telescope current_buffer_fuzzy_find sorting_strategy=ascending prompt_position=top<CR>" }
-    nmap { "<leader>lg", "<cmd>Telescope live_grep<CR>" }
+    nmap {"C-f", "<cmd>Telescope current_buffer_fuzzy_find sorting_strategy=ascending prompt_position=top<CR>"}
+    nmap {"<leader>lg", "<cmd>Telescope live_grep<CR>"}
 
     -- Set autocommands conditional on server_capabilities
     if client.server_capabilities.document_highlight then
@@ -274,7 +186,7 @@ local custom_attach = function(client, bufnr)
 				autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
 				autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
 			augroup END
-		]]     )
+		]])
     end
 
     if client.server_capabilities.document_formatting then
@@ -284,7 +196,7 @@ local custom_attach = function(client, bufnr)
 				autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
 				autocmd BufWritePre <buffer> lua OrganizeImports(1000)
 			augroup END
-		]]     )
+		]])
     end
 
     -- Set some keybinds conditional on server capabilities
@@ -313,16 +225,25 @@ local servers = {
                 schemas = {
                     kubernetes = "/*.yaml"
                 },
-                schemaDownload = { enable = true },
-                validate = true,
+                schemaDownload = {
+                    enable = true
+                },
+                validate = true
             }
-        },
+        }
     },
     eslint = true,
     sumneko_lua = true,
     svelte = true,
     elixirls = true,
-    tsserver = true,
+    tsserver = {
+        settings = {
+            tsserver = {
+                filetypes = {"typescript", "typescriptreact", "typescript.tsx"},
+                cmd = {"typescript-language-server", "--stdio"}
+            }
+        }
+    },
     tailwindcss = true,
     marksman = true,
     terraformls = true,
@@ -348,7 +269,7 @@ local servers = {
                 completion = {
                     enable_snippets = "true"
                 },
-                experimental_features = { "rust-analyzer-completion-tests", "rust-analyzer-completion-tests-tests" }
+                experimental_features = {"rust-analyzer-completion-tests", "rust-analyzer-completion-tests-tests"}
             }
         }
     }
@@ -398,7 +319,7 @@ end
 function OrganizeImports(timeoutms)
     local params = vim.lsp.util.make_range_params()
     params.context = {
-        only = { "source.organizeImports" }
+        only = {"source.organizeImports"}
     }
     local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeoutms)
     for _, res in pairs(result or {}) do
@@ -437,27 +358,31 @@ require('telescope').load_extension('fzf')
 require('telescope').load_extension('file_browser')
 -- Telescope maps
 
-nmap { "<leader>ff", "<cmd>Telescope find_files<CR>" }
-nmap { "<leader>fg", "<cmd>Telescope live_grep<CR>" }
-nmap { "<leader>fb", "<cmd>Telescope buffers<CR>" }
-nmap { "<leader>fh", "<cmd>Telescope help_tags<CR>" }
-nmap { "<leader>fb", "<cmd>Telescope file_browser<CR>" }
-nmap { "<leader>fh", "<cmd>Telescope help_tags<CR>" }
+nmap {"<leader>ff", "<cmd>Telescope find_files<CR>"}
+nmap {"<leader>fg", "<cmd>Telescope live_grep<CR>"}
+nmap {"<leader>fb", "<cmd>Telescope buffers<CR>"}
+nmap {"<leader>fh", "<cmd>Telescope help_tags<CR>"}
+nmap {"<leader>fb", "<cmd>Telescope file_browser<CR>"}
+nmap {"<leader>fh", "<cmd>Telescope help_tags<CR>"}
 
-nmap { "<leader>bn", "<cmd>:bnext<CR>" }
-nmap { "<leader>bp", "<cmd>:bprevious<CR>" }
-nmap { "<leader>bf", "<cmd>:bfirst<CR>" }
-nmap { "<leader>bl", "<cmd>:blast<CR>" }
-nmap { "<leader>fn", "<cmd>Telescope find_files cwd=~/.config/nvim<cr>" }
-nmap { "<leader>fd", "<cmd>Telescope find_files cwd=~/Development<cr>" }
-nmap { "<leader>fw", "<cmd>Telescope find_files cwd=~/Development/work<cr>" }
+nmap {"<leader>bn", "<cmd>:bnext<CR>"}
+nmap {"<leader>bp", "<cmd>:bprevious<CR>"}
+nmap {"<leader>bf", "<cmd>:bfirst<CR>"}
+nmap {"<leader>bl", "<cmd>:blast<CR>"}
+nmap {"<leader>fn", "<cmd>Telescope find_files cwd=~/.config/nvim<cr>"}
+nmap {"<leader>fd", "<cmd>Telescope find_files cwd=~/Development<cr>"}
+nmap {"<leader>fw", "<cmd>Telescope find_files cwd=~/Development/work<cr>"}
+-- format on save commented out because it causes problems on non lsp buffers
+vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
 
-local mappings = {}
-mappings.curr_buf = function()
-    local opt = require('telescope.themes').get_dropdown({
-        height = 10,
-        previewer = false
-    })
-    require('telescope.builtin').current_buffer_fuzzy_find(opt)
-end
-return mappings
+require "julianfbeck.harpoon"
+require "julianfbeck.alpha"
+require "julianfbeck.autocommands"
+require "julianfbeck.autopairs"
+require "julianfbeck.cmp"
+require "julianfbeck.colorscheme"
+require "julianfbeck.comment"
+require "julianfbeck.git"
+require "julianfbeck.impatient"
+require "julianfbeck.intentline"
+
