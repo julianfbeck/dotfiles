@@ -1,4 +1,3 @@
-
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 require("nvim-lsp-installer").setup({
@@ -19,7 +18,39 @@ end
 
 
 
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+
+-- vim loop
+local config = {
+    virtual_text = false, -- disable virtual text
+    signs = {
+        active = signs, -- show signs
+    },
+    update_in_insert = true,
+    underline = true,
+    severity_sort = true,
+    float = {
+        focusable = true,
+        style = "minimal",
+        border = "rounded",
+        source = "always",
+        header = "",
+        prefix = "",
+    },
+}
+
+vim.diagnostic.config(config)
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+    border = "rounded",
+})
+
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+    border = "rounded",
+})
+
+
 
 local custom_init = function(client)
     client.config.flags = client.config.flags or {}
@@ -40,7 +71,7 @@ local custom_attach = function(client, bufnr)
 
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     -- leaving only what I actually use...
-	buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
+    buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
     buf_set_keymap("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
     buf_set_keymap("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
     buf_set_keymap("n", "ca", "<cmd>Telescope lsp_code_actions<CR>", opts)
@@ -49,13 +80,23 @@ local custom_attach = function(client, bufnr)
     buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 
     buf_set_keymap("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
-	buf_set_keymap( "n", "gI", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+    buf_set_keymap("n", "gI", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
 
 
     buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
     buf_set_keymap("n", "<leader>D", "<cmd>Telescope lsp_type_definitions<CR>", opts)
     buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
     buf_set_keymap("n", "<leader>ca", "<cmd>Telescope lsp_code_actions<CR>", opts)
+    -- temp keymaps
+    buf_set_keymap("n", "<leader>lf", "<cmd>lua vim.lsp.buf.formatting()<cr>", opts)
+    buf_set_keymap("n", "<leader>li", "<cmd>LspInfo<cr>", opts)
+    buf_set_keymap("n", "<leader>lI", "<cmd>LspInstallInfo<cr>", opts)
+    buf_set_keymap("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
+    buf_set_keymap("n", "<leader>lj", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", opts)
+    buf_set_keymap("n", "<leader>lk", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", opts)
+    buf_set_keymap("n", "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
+    buf_set_keymap("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+    buf_set_keymap("n", "<leader>lq", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
 
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, {
         buffer = 0
@@ -82,8 +123,8 @@ local custom_attach = function(client, bufnr)
         buffer = 0
     })
 
-    nmap {"C-f", "<cmd>Telescope current_buffer_fuzzy_find sorting_strategy=ascending prompt_position=top<CR>"}
-    nmap {"<leader>lg", "<cmd>Telescope live_grep<CR>"}
+    nmap { "C-f", "<cmd>Telescope current_buffer_fuzzy_find sorting_strategy=ascending prompt_position=top<CR>" }
+    nmap { "<leader>lg", "<cmd>Telescope live_grep<CR>" }
 
     -- Set autocommands conditional on server_capabilities
     if client.server_capabilities.document_highlight then
@@ -93,7 +134,7 @@ local custom_attach = function(client, bufnr)
 				autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
 				autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
 			augroup END
-		]])
+		]]     )
     end
 
     if client.server_capabilities.document_formatting then
@@ -103,15 +144,21 @@ local custom_attach = function(client, bufnr)
 				autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
 				autocmd BufWritePre <buffer> lua OrganizeImports(1000)
 			augroup END
-		]])
+		]]     )
     end
 
     -- Set some keybinds conditional on server capabilities
-    if client.resolved_capabilities.document_formatting then
+    if client.server_capabilities.document_formatting then
         buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-    elseif client.resolved_capabilities.document_range_formatting then
+    elseif client.server_capabilities.document_range_formatting then
         buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
     end
+    -- -- Set some keybinds conditional on server capabilities
+    -- if client.resolved_capabilities.document_formatting then
+    --     buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+    -- elseif client.resolved_capabilities.document_range_formatting then
+    --     buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+    -- end
 
 end
 local servers = {
@@ -146,9 +193,9 @@ local servers = {
     tsserver = {
         settings = {
             tsserver = {
-                filetypes = {"typescript", "typescriptreact", "typescript.tsx"},
-                cmd = {"typescript-language-server", "--stdio"},
-				root_dir = lspconfig.util.root_pattern('.git');
+                filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
+                cmd = { "typescript-language-server", "--stdio" },
+                root_dir = lspconfig.util.root_pattern('.git');
             }
         }
     },
@@ -177,7 +224,7 @@ local servers = {
                 completion = {
                     enable_snippets = "true"
                 },
-                experimental_features = {"rust-analyzer-completion-tests", "rust-analyzer-completion-tests-tests"}
+                experimental_features = { "rust-analyzer-completion-tests", "rust-analyzer-completion-tests-tests" }
             }
         }
     }
@@ -213,7 +260,7 @@ end
 function OrganizeImports(timeoutms)
     local params = vim.lsp.util.make_range_params()
     params.context = {
-        only = {"source.organizeImports"}
+        only = { "source.organizeImports" }
     }
     local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeoutms)
     for _, res in pairs(result or {}) do

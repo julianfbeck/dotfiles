@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find ~/Development/node ~/Development/training ~/Development/python ~/Development/Devops ~/Development/Devops/scripts ~/Development/work ~/Development/GoWorkspace/src/github.com/julianfbeck ~/work ~/.config -mindepth 1 -maxdepth 1 -type d | fzf)
+    selected=$(find ~/Development/node ~/Development/go ~/Development/training ~/Development/fonic ~/Development/python ~/Development/Devops ~/Development/Devops/scripts ~/Development/work ~/Development/GoWorkspace/src/github.com/julianfbeck ~/work ~/.config -mindepth 1 -maxdepth 1 -type d | fzf)
 fi
 
 if [[ -z $selected ]]; then

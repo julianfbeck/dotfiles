@@ -1,6 +1,6 @@
 -- Set wrap and spell in markdown and gitcommit
-vim.api.nvim_create_autocmd({"FileType"}, {
-    pattern = {"gitcommit", "markdown"},
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    pattern = { "gitcommit", "markdown" },
     callback = function()
         vim.opt_local.wrap = true
         vim.opt_local.spell = true
@@ -8,7 +8,7 @@ vim.api.nvim_create_autocmd({"FileType"}, {
 })
 
 -- Highlight Yanked Text
-vim.api.nvim_create_autocmd({"TextYankPost"}, {
+vim.api.nvim_create_autocmd({ "TextYankPost" }, {
     callback = function()
         vim.highlight.on_yank {
             higroup = "Visual",
@@ -18,8 +18,8 @@ vim.api.nvim_create_autocmd({"TextYankPost"}, {
 })
 
 -- Remove statusline and tabline when in Alpha
-vim.api.nvim_create_autocmd({"User"}, {
-    pattern = {"AlphaReady"},
+vim.api.nvim_create_autocmd({ "User" }, {
+    pattern = { "AlphaReady" },
     callback = function()
         vim.cmd [[
 		set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2
@@ -30,4 +30,3 @@ vim.api.nvim_create_autocmd({"User"}, {
 
 -- format on save commented out because it causes problems on non lsp buffers
 vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
-
