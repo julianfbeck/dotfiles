@@ -15,7 +15,7 @@ alias .6='cd ../../../../../../'            # Go back 6 directory levels
 #Open finder in currend dir
 alias f='open -a Finder ./'
 alias jn='jupyter notebook'
-alias path='echo -e ${PATH//:/\\n}'
+
 
 # Git aliases.
 alias gs='git status'
@@ -30,6 +30,7 @@ alias godir=' cd /Users/julianbeck/Development/GoWorkspace/src/github.com/julian
 #copys ip adress to clipboard and removes new line
 alias ipc='ipconfig getifaddr en0 | tr -d '\n' | pbcopy' 
 alias pub='cat ~/.ssh/id_rsa.pub'
+alias remote=git remote -v | grep fetch | awk '{print $2}' | sed -e 's/ssh:\/\/git@//' -e 's/:2222//' | sed 's_^_https://_' | xargs open
 
 alias edit='code-insiders'
 alias ci='code-insiders'
@@ -84,3 +85,47 @@ terraform() {
 alias k=kubectl
 # dotfiles
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+# custom aliases
+
+
+
+
+# Markant 
+function check_parameter {
+    if [[ "$1" == "mips" ]] ; then
+        if [[ "$2" != "on-prem-prod" && "$2" != "infra-dev" && "$2" != "dev" && "$2" != "test" && "$2" != "accept" && "$2" != "prod" ]] ; then
+            echo "second parameter has to be 'on-prem-prod', infra-dev', 'dev', 'test, 'accept' or 'prod'."
+            return
+        fi
+    elif [[ "$1" == "meps" ]]; then
+        if [[ "$2" != "dev" && "$2" != "test" && "$2" != "accept" && "$2" != "prod" ]] ; then 
+            echo "second parameter has to be 'dev', 'test, 'accept' or 'prod'."
+        fi
+        return
+    else
+        echo "first parameter has to be 'mips' or 'meps'."
+        return
+    fi
+}
+
+function sp {
+    check_parameter $1 $2
+
+    declare -A usernames
+    usernames[mipsinfra-dev]="ec97f09d-3eb4-4bf5-aa3f-ff69d3daaa41"
+    usernames[mipsdev]="5e3200ca-6053-4019-a8f1-54c0cc0bb4d0"
+    usernames[mipstest]="5e3200ca-6053-4019-a8f1-54c0cc0bb4d0"
+    usernames[mipsaccept]="e882bf4b-f7ec-47ef-ba72-886ccabd8fca"
+    usernames[mipsprod]="46d0c716-04ee-4e2d-bd82-4e4b09d68b12"
+    usernames[mepsdev]="28f322a1-e60a-4350-99a8-4a442afc2dc6"
+    usernames[mepstest]="28f322a1-e60a-4350-99a8-4a442afc2dc6"
+    usernames[mepsaccept]="db107131-f502-4892-b288-74491012bb06"
+    usernames[mepsprod]="70d56f5f-8e9b-40cb-86ea-2bb409e21e73"
+    usernames[mipson-prem-prod]="2ef5c4fd-7e3d-48be-93e4-ff11f499559f"
+    az login \
+    --service-principal \
+    -u "${usernames[$1$2]}" \
+    -p $(gopass show -o mipsql/kapitan-sp/$1-ql-$2) \
+    -t "eba24dc8-c5d5-4c1d-983b-425101d720ba"
+}
+

@@ -30,6 +30,7 @@ ENABLE_CORRECTION="false"
 # User configuration
 export EDITOR='nvim'
 export PATH="$HOME/.npm/bin:$PATH"
+export VISUAL="nvim"
 
 # Enable plugins.
 plugins=(git
@@ -78,6 +79,8 @@ zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}
 source "$HOME/.aliases"
 source "$HOME/.docker-aliases"
 
+source /opt/homebrew/etc/bash_completion.d/az
+
 # // load nvm
 export NVM_DIR="$HOME/.nvm"
   [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
@@ -97,3 +100,11 @@ alias sourcetmux='tmux source ~/.tmux.conf'
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# pnpm
+export PNPM_HOME="/Users/jbeck/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
